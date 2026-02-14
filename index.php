@@ -12,19 +12,22 @@ include "header.html";
 <label for="celular">Celular: <input type="number" name="celular"/></label><br>
 <label for="email">Email: <input type="email" name="email"/></label><br>
 <button type="submit">Enviar</button><br>
-<a href="?pg=contatos">Mostrar Contatos</a>
+<a href="?pg=contatos">Mostrar Contatos</a><br>
 
 <?php
+    $Contato = new Contato($pdo);
+
 if ($pg == "adicionarContato") 
 {
-    $Contato = new Contato($pdo);
     $Contato->adicionarContato();
 
 }
 elseif ($pg == "contatos") 
 {
-    $Contato = new Contato($pdo);
     $Contato->mostrarContatos();
+}
+elseif ($pg == "deletarContato") {
+    $Contato->deletarContato();
 }
 
 include "footer.html";
