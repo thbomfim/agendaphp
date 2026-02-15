@@ -59,14 +59,16 @@ class Contato {
             <li><strong> Nome :</strong><?= $valor['nome'] ?></li>
             <li><strong> celular :</strong><?= $valor['celular'] ?></li>
             <li><strong> Email :</strong><?= $valor['email'] ?></li>
-            <a href="index.php?pg=deletarContato&id=<?=$valor['id']?>">[X]</a>
-            <a href="index.php?pg=alterarContato&id=<?=$valor['id']?>&nome=<?=$valor['nome']?>&celular=<?=$valor['celular']?>&email=<?=$valor['email']?>">[A]</a>
+            <!--colocar um alert para confirmar o delete no link abaixo--> 
+            <a href="index.php?pg=deletarContato&id=<?=$valor['id']?>">[X]</a> |
+            <a href="index.php?pg=alterarContato&id=<?=$valor['id']?>">[A]</a>
             <hr>
             <?php
             }
     }  
     
     public function deletarContato() {
+        try {
         $id = $_GET["id"];
 
     //verificar se não o contato existe
@@ -88,15 +90,62 @@ class Contato {
 
         if ($stmt->rowCount() > 0) {
             echo 'Contato apagado!';
-        } else {
-            echo 'Ocorreu algum erro!';
+        }
+        
+        }catch (PDOException $e){
+            echo 'Ocorreu algum erro! :' .$e->getMessage();
+        }
+        catch (Exception $e) {
+            echo 'Ocorreu algum erro:' .$e->getMessage();
         }
     }
 
-     public function alterarContato() {
-        $id = $_GET["id"];
+     public function alterarContato($id) {
+        try {
+            $id = $_POST['id'];
+            $nome = $_POST['nome'];
+            $celular = $_POST['celular'];
+            $email = $_POST['email'];
 
-    //verificar se não o contato existe
+            var_dump($id);
+            var_dump($nome);
+            var_dump($celular);
+            var_dump($email);
+
+        //verificar se não o contato existe
+            $sql = "SELECT * FROM agenda WHERE id = :id";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(":id", $id);
+            $stmt->execute();
+            $result = $stmt->fetch();
+
+            if (!$result) {
+                //ao invez do die lancei em uma excecao para cair no catch
+                throw new Exception("Este contato não existe!");
+            }
+
+            //atualiza as informacoes do contato
+            $sql = "UPDATE agenda set nome = :nome, celular = :celular, email = :email WHERE id = :id";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([
+                ':nome' => $nome,
+                ':celular' => $celular,
+                ':email' => $email,
+                ':id' => $id
+            ]);
+
+                echo 'Contato alterado com sucesso!';
+     } catch (PDOException $e) {
+            //captura os erros de sintaxe SQL ou conexao
+            echo "Erro no banco de dados: " .$e->getMessage();
+        } catch (Exception $e) {
+            // Captura o erro do "contato não existe" ou outros erros manuais
+            echo "Error: " . $e->getMessage();
+        }
+     }
+
+     public function buscarDados($id) {
+        //verificar se não o contato existe
         $sql = "SELECT * FROM agenda WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(":id", $id);
@@ -107,19 +156,15 @@ class Contato {
             die("Este contato não existe!");
         }
 
-        //atualiza as informacoes do contato
-        $sql = "UPDATE agenda set nome = :nome, celular = :celular, email = :email WHERE id = :id";
+        //busca os dados
+        $sql = "SELECT * FROM agenda WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(":nome", $nome);
-        $stmt->bindParam(":celular", $celular);
-        $stmt->bindParam(":email", $email);
+        $stmt->bindParam(":id", $id);
         $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($stmt->rowCount() > 0) {
-            echo 'Contato alterado com sucesso!';
-        } else {
-            echo 'Ocorreu algum erro!';
-        }
+        return $result;
+
      }
 
 
