@@ -11,8 +11,10 @@ include "header.html";
 <label for="nome">Nome: <input type="text" name="nome"/></label><br>
 <label for="celular">Celular: <input type="number" name="celular"/></label><br>
 <label for="email">Email: <input type="email" name="email"/></label><br>
-<button type="submit">Enviar</button><br>
-<a href="?pg=contatos">Mostrar Contatos</a><br>
+<button type="submit">Enviar</button>
+</form>
+<br>
+<a href="?pg=contatos">Mostrar Contatos</a><br><hr>
 
 <?php
     $Contato = new Contato($pdo);
@@ -26,8 +28,27 @@ elseif ($pg == "contatos")
 {
     $Contato->mostrarContatos();
 }
-elseif ($pg == "deletarContato") {
+elseif ($pg == "deletarContato") 
+{
     $Contato->deletarContato();
+}
+elseif ($pg == "alterarContato") 
+{
+    $id = $_GET['id'] ?? '';
+    $buscarContato = $Contato->buscarDados($id);
+?>
+        <form action="index.php?pg=alterarContatook" method="post">
+        <input type="hidden" name="id" value="<?=$buscarContato['id']?>"/>
+        <label for="nome">Nome: <input type="text" name="nome" value="<?=$buscarContato['nome']?>"/></label><br>
+        <label for="celular">Celular: <input type="number" name="celular" value="<?=$buscarContato['celular']?>"/></label><br>
+        <label for="email">Email: <input type="email" name="email" value="<?=$buscarContato['email']?>"/></label><br>
+        <button type="submit">Enviar</button>
+        </form>
+<?php
+}elseif ($pg == "alterarContatook") 
+{
+    $id = $_POST['id'] ?? '';
+    $Contato->alterarContato($id);
 }
 
 include "footer.html";
