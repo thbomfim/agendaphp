@@ -1,0 +1,53 @@
+@font-face {
+    font-family: Oswald;
+    src: url('Oswald.ttf');
+  }
+
+body {
+    background-color: #5CACEE;
+}
+
+li {
+    list-style-type: none; /* Remove marcadores */
+    padding: 0;           /* Remove preenchimento padrão */
+    margin: 0;            /* Remove margem padrão */
+}
+
+.divcentro {
+    background-color: aliceblue;
+    border-radius: 10px;
+    padding: 16px;
+}
+
+.container {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+#logo {
+    font-family: 'Oswald', sans-serif; 
+    color: black;
+    border-bottom: .5rem solid #3c05ff;
+    border-top: .5rem solid #3c05ff;
+    margin-bottom: 1.80rem;
+    margin-top: 1.80rem;
+    padding: 1.2rem 0;
+    text-align: center;
+}
+
+input {
+    border-radius: 6px;
+    border: solid 0.5px;
+    padding: 3px;
+}
+
+.campo {
+  display: flex;       /* Alinha label e input na mesma linha */
+  align-items: center; /* Centraliza verticalmente o texto com o campo */
+  gap: 10px;          /* Espaço entre o label e o seu input */
+  margin-bottom: 15px; /* Espaço entre uma linha e outra */
+}
+
+label {
+  min-width: 60px;     /* Opcional: alinha todos os inputs na mesma coluna */
+}
